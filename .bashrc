@@ -40,12 +40,12 @@ shopt -s cdspell
 
 # Completion options
 #
-# These completion tuning parameters change the default behavior of bash_complet                                                                             ion:
+# These completion tuning parameters change the default behavior of bash_completion:
 #
 # Define to access remotely checked-out files over passwordless ssh for CVS
 # COMP_CVS_REMOTE=1
 #
-# Define to avoid stripping description in --option=description of './configure                                                                              --help'
+# Define to avoid stripping description in --option=description of './configure  --help'
 # COMP_CONFIGURE_HINTS=1
 #
 # Define to avoid flattening internal contents of tar files
@@ -345,18 +345,20 @@ ALERT=${BWhite}${On_Red} # Bold White on red background
 if [ -n "${SSH_CONNECTION}" ]; then
     CNX=${Green}        # Connected on remote machine, via ssh (good).
         SHOW_HOSTNAME="1"
-elif [[ "${DISPLAY%%:0*}" != "" ]]; then
-    CNX=${ALERT}        # Connected on remote machine, not via ssh (bad).
-        SHOW_HOSTNAME="1"
 else
     CNX=${BCyan}        # Connected on local machine.
         SHOW_HOSTNAME="0"
 fi
 
+lognameval=$(logname 2>/dev/null)
+if [ $? -ne 0 ]; then
+    lognameval=$LOGNAME
+fi
+
 # Test user type:
 if [[ ${USER} == "root" ]]; then
     SU=${Red}           # User is root.
-elif [[ ${USER} != $(logname) ]]; then
+elif [[ ${USER} != ${lognameval} ]]; then
     SU=${BRed}          # User is not login user.
 else
     SU=${Green}         # User is normal (well ... most of us are).
@@ -477,7 +479,7 @@ then
 		curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 
 	pushd  ~/.vim/bundle > /dev/null
-	git clone git://github.com/jeffkreeftmeijer/vim-numbertoggle.git
+	git clone https://github.com/jeffkreeftmeijer/vim-numbertoggle.git
 
 	popd > /dev/null
 
