@@ -467,8 +467,24 @@ esac
 
 alias less='less -R' # color
 alias d='dirs -v'
-alias sd='pushd'
 alias fd='popd'
+
+function sd {
+	re='^[0-9]+$'
+	if [[ $# -eq 0 ]]
+	then
+		pushd
+	elif [[ $1 =~ $re ]]
+	then
+		pushd "+$1" > /dev/null
+		local curdir=`pwd`
+		popd > /dev/null
+		pushd "-$(($1-1))" > /dev/null
+		pushd $curdir
+	else
+		pushd "$1"
+	fi
+}
 
 
 if [ ! -f ~/.setup_complete ] 
